@@ -17,14 +17,6 @@ import { Spin } from "antd";
 const Analytics: React.FC = () => {
   const { loading, totalData } = useFetch();
 
-  const newResult = totalData;
-
-  const data = newResult.map((item: any) => ({
-    year: item.year,
-    totalJobs: item.totalJobs,
-    averageSalary: Math.floor(item.totalSalary / item.totalJobs),
-  }));
-
   return (
     <div>
       {loading ? (
@@ -33,7 +25,7 @@ const Analytics: React.FC = () => {
         </div>
       ) : (
         <ResponsiveContainer height={400}>
-          <LineChart data={data}>
+          <LineChart data={totalData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="year" allowDuplicatedCategory={false} />
             <YAxis />

@@ -6,29 +6,9 @@ import _ from "lodash";
 import { Spin } from "antd";
 
 const MainTable: React.FC = () => {
-  const { loading, totalData } = useFetch();
+  const { loading, totalData, insideTableData } = useFetch();
   const [selectedYear, setSelectedYear] = useState<number>(0);
   const [selectedYearData, setSelectedYearData] = useState<any[]>([]);
-
-  const newResult = totalData;
-  const data = newResult.map((item) => ({
-    year: item.year,
-    totalJobs: item.totalJobs,
-    averageSalary: Math.floor(item.totalSalary / item.totalJobs),
-  }));
-
-  const insideTableData = newResult.map((item) => {
-    const array = _(item.arr)
-      .groupBy("job_title")
-      .map((job_title_arr, job_title) => ({
-        jobTitle: job_title,
-        countJobs: _.countBy(item.arr, "job_title")[job_title],
-        totalSalary: _.sumBy(job_title_arr, "salary"),
-      }))
-      .value();
-
-    return array;
-  });
 
   interface SalaryData {
     year: number;
@@ -66,7 +46,7 @@ const MainTable: React.FC = () => {
 
       const data = insideTableData[record.year - 2020];
 
-      const newData = data.map((item) => ({
+      const newData = data.map((item: any) => ({
         jobTitle: item.jobTitle,
         countJobs: item.countJobs,
         averageSalary: Math.floor(item.totalSalary / item.countJobs),
@@ -124,7 +104,7 @@ const MainTable: React.FC = () => {
               />
             ),
           }}
-          dataSource={data}
+          dataSource={totalData}
           rowKey="year"
           pagination={false}
         />

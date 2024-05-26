@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const useFetch = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [totalData, setTotalData] = useState<any[]>([]);
+  const [insideTableData, setInsideTableData] = useState<any[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -21,7 +22,7 @@ const useFetch = () => {
           header: true,
           dynamicTyping: true,
         });
-        const newresult = _(data)
+        const newData = _(data)
           .groupBy("work_year")
           .map((work_year, year) => ({
             arr: work_year,
@@ -31,7 +32,28 @@ const useFetch = () => {
           }))
           .value();
 
-        const sortedData = newresult.filter((res) => !isNaN(res.year));
+        const newResult = newData.filter((res) => !isNaN(res.year));
+
+        const sortedData = newResult.map((item) => ({
+          year: item.year,
+          totalJobs: item.totalJobs,
+          averageSalary: Math.floor(item.totalSalary / item.totalJobs),
+        }));
+
+        const tableData = newResult.map((item) => {
+          const array = _(item.arr)
+            .groupBy("job_title")
+            .map((job_title_arr, job_title) => ({
+              jobTitle: job_title,
+              countJobs: _.countBy(item.arr, "job_title")[job_title],
+              totalSalary: _.sumBy(job_title_arr, "salary"),
+            }))
+            .value();
+
+          return array;
+        });
+
+        setInsideTableData(tableData);
         setTotalData(sortedData);
       } catch (error) {
         console.log(error);
@@ -42,7 +64,7 @@ const useFetch = () => {
     fetchCsvData();
   }, []);
 
-  return { loading, totalData };
+  return { loading, totalData, insideTableData };
 };
 
 export default useFetch;
