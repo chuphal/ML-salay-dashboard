@@ -1,0 +1,12 @@
+.container {
+  width: 95vw;
+}
+
+.heading {
+  font-size: 2.3rem;
+  padding: 10;
+}
+
+.tooltip-work {
+  background-color: #fff2d7;
+}
