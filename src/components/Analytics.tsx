@@ -31,7 +31,7 @@ const Analytics: React.FC = () => {
     .value();
 
   const newResult = result.filter((res) => !isNaN(res.year));
-  console.log(newResult);
+
   const data = newResult.map((item: any) => ({
     year: item.year,
     totalJobs: item.totalJobs,

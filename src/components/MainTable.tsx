@@ -7,7 +7,7 @@ import _ from "lodash";
 const MainTable: React.FC = () => {
   const [totaldata, setTotalData] = useState<any[]>([]);
   const { fetchCsvData } = useFetch();
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number>(0);
   const [selectedYearData, setSelectedYearData] = useState<any[]>([]);
 
   useEffect(() => {
@@ -75,7 +75,9 @@ const MainTable: React.FC = () => {
   ];
 
   const handleExpand = (expanded: any, record: any) => {
-    if (expanded) {
+    if (expanded | selectedYear) {
+      setSelectedYear(record.year);
+
       const data = insideTableData[record.year - 2020];
 
       const newData = data.map((item) => ({
@@ -88,7 +90,13 @@ const MainTable: React.FC = () => {
     }
   };
 
-  const detailsColumns = [
+  interface DetailedSalaryData {
+    jobtitle: string;
+    countJobs: number;
+    averageSalary: number;
+  }
+
+  const detailsColumns: ColumnsType<DetailedSalaryData> = [
     {
       title: "Job Title",
       dataIndex: "jobTitle",
@@ -98,11 +106,13 @@ const MainTable: React.FC = () => {
       title: "Number of Jobs",
       dataIndex: "countJobs",
       key: "countJobs",
+      sorter: (a, b) => a.countJobs - b.countJobs,
     },
     {
       title: "Avg. Salary (USD)",
       dataIndex: "averageSalary",
       key: "averageSalary",
+      sorter: (a, b) => a.averageSalary - b.averageSalary,
     },
   ];
 
