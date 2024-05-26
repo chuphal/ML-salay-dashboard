@@ -1,25 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Table } from "antd";
 import useFetch from "../hooks/useFetch";
 import { ColumnsType } from "antd/es/table";
 import _ from "lodash";
+import { Spin } from "antd";
 
 const MainTable: React.FC = () => {
-  const [totaldata, setTotalData] = useState<any[]>([]);
-  const { fetchCsvData } = useFetch();
+  const { loading, totalData } = useFetch();
   const [selectedYear, setSelectedYear] = useState<number>(0);
   const [selectedYearData, setSelectedYearData] = useState<any[]>([]);
 
-  useEffect(() => {
-    fetchCsvData("/data/salaries.csv", setTotalData);
-  }, []);
-
-  const result = _(totaldata)
+  const result = _(totalData)
     .groupBy("work_year")
     .map((work_year, year) => ({
       arr: work_year,
       year: Number(year),
-      totalJobs: _.countBy(totaldata, "work_year")[year],
+      totalJobs: _.countBy(totalData, "work_year")[year],
       totalSalary: _.sumBy(work_year, "salary"),
     }))
     .value();
@@ -118,25 +114,31 @@ const MainTable: React.FC = () => {
 
   return (
     <>
-      <Table
-        columns={columns}
-        expandable={{
-          expandRowByClick: true,
-          onExpand: (expanded, record) => handleExpand(expanded, record),
-          expandIcon: () => <></>,
-          expandedRowRender: () => (
-            <Table
-              columns={detailsColumns}
-              dataSource={selectedYearData}
-              rowKey="job_title"
-              pagination={{ position: ["bottomCenter"] }}
-            />
-          ),
-        }}
-        dataSource={data}
-        rowKey="year"
-        pagination={false}
-      />
+      {loading ? (
+        <div className="loader">
+          <Spin size={"large"} />
+        </div>
+      ) : (
+        <Table
+          columns={columns}
+          expandable={{
+            expandRowByClick: true,
+            onExpand: (expanded, record) => handleExpand(expanded, record),
+            expandIcon: () => <></>,
+            expandedRowRender: () => (
+              <Table
+                columns={detailsColumns}
+                dataSource={selectedYearData}
+                rowKey="job_title"
+                pagination={{ position: ["bottomCenter"] }}
+              />
+            ),
+          }}
+          dataSource={data}
+          rowKey="year"
+          pagination={false}
+        />
+      )}
     </>
   );
 };
