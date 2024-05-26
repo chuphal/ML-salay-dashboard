@@ -10,17 +10,7 @@ const MainTable: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<number>(0);
   const [selectedYearData, setSelectedYearData] = useState<any[]>([]);
 
-  const result = _(totalData)
-    .groupBy("work_year")
-    .map((work_year, year) => ({
-      arr: work_year,
-      year: Number(year),
-      totalJobs: _.countBy(totalData, "work_year")[year],
-      totalSalary: _.sumBy(work_year, "salary"),
-    }))
-    .value();
-
-  const newResult = result.filter((res) => !isNaN(res.year));
+  const newResult = totalData;
   const data = newResult.map((item) => ({
     year: item.year,
     totalJobs: item.totalJobs,

@@ -17,16 +17,7 @@ import { Spin } from "antd";
 const Analytics: React.FC = () => {
   const { loading, totalData } = useFetch();
 
-  const result = _(totalData)
-    .groupBy("work_year")
-    .map((work_year_arr, year) => ({
-      year: Number(year),
-      totalJobs: _.countBy(totalData, "work_year")[year],
-      totalSalary: _.sumBy(work_year_arr, "salary"),
-    }))
-    .value();
-
-  const newResult = result.filter((res) => !isNaN(res.year));
+  const newResult = totalData;
 
   const data = newResult.map((item: any) => ({
     year: item.year,

@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
 
@@ -20,7 +21,18 @@ const useFetch = () => {
           header: true,
           dynamicTyping: true,
         });
-        setTotalData(data);
+        const newresult = _(data)
+          .groupBy("work_year")
+          .map((work_year, year) => ({
+            arr: work_year,
+            year: Number(year),
+            totalJobs: _.countBy(data, "work_year")[year],
+            totalSalary: _.sumBy(work_year, "salary"),
+          }))
+          .value();
+
+        const sortedData = newresult.filter((res) => !isNaN(res.year));
+        setTotalData(sortedData);
       } catch (error) {
         console.log(error);
       } finally {
