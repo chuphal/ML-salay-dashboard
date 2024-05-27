@@ -27,7 +27,7 @@ const Analytics: React.FC = () => {
         <ResponsiveContainer height={400}>
           <LineChart data={totalData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" allowDuplicatedCategory={false} />
+            <XAxis dataKey="year" />
             <YAxis />
             <Tooltip content={<CustomTooltip />} />
             <Legend />

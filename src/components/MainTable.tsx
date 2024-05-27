@@ -46,13 +46,19 @@ const MainTable: React.FC = () => {
 
       const data = insideTableData[record.year - 2020];
 
-      const newData = data.map((item: any) => ({
-        jobTitle: item.jobTitle,
-        countJobs: item.countJobs,
-        averageSalary: Math.floor(item.totalSalary / item.countJobs),
-      }));
-
-      setSelectedYearData(newData);
+      const arrangeData = async () => {
+        try {
+          const newData = await data.map((item: any) => ({
+            jobTitle: item.jobTitle,
+            countJobs: item.countJobs,
+            averageSalary: Math.floor(item.totalSalary / item.countJobs),
+          }));
+          setSelectedYearData(newData);
+        } catch (error) {
+          console.log("error in handle expand", error);
+        }
+      };
+      arrangeData();
     }
   };
 
