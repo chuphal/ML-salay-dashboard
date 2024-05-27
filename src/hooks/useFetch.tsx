@@ -1,6 +1,7 @@
 import _ from "lodash";
-import Papa from "papaparse";
+// import Papa from "papaparse";
 import { useEffect, useState } from "react";
+import data from "../assets/csvjson.json";
 
 const useFetch = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -13,15 +14,15 @@ const useFetch = () => {
     const fetchCsvData = async () => {
       setLoading(true);
       try {
-        const response = await fetch("/data/salaries.csv");
-        const reader = response.body!.getReader();
-        const result = await reader.read();
-        const decoder = new TextDecoder("utf-8");
-        const csvString = decoder.decode(result.value!);
-        const { data } = Papa.parse(csvString, {
-          header: true,
-          dynamicTyping: true,
-        });
+        // const response = await fetch("../assets/salaries.csv");
+        // const reader = response.body!.getReader();
+        // const result = await reader.read();
+        // const decoder = new TextDecoder("utf-8");
+        // const csvString = decoder.decode(result.value!);
+        // const { data } = Papa.parse(csvString, {
+        //   header: true,
+        //   dynamicTyping: true,
+        // });
         const newData = _(data)
           .groupBy("work_year")
           .map((work_year, year) => ({
